@@ -5,7 +5,8 @@ import simplejson as json
 import uuid
 import requests
 from collections import deque
-
+## @package pyPsynth
+#  pyPsynth is the official python package for generating graphs in Psymphonic Psynth
 
 allowed_queries = ['createmap', 'getfilelist', 'renamemap', 'getwholegraph', 'newnode', 'batchnodes',
                     'delnode', 'newrel', 'batchrels', 'delrel', 'updatenode','updaterel', 'newdetail', 'deldetail',
@@ -13,28 +14,57 @@ allowed_queries = ['createmap', 'getfilelist', 'renamemap', 'getwholegraph', 'ne
                     'interconnections', 'expandselection', 'setgraphname', 'getgraphname', 'sessionquit', 'saveprefs',
                     'getheat', 'newreltype', 'updatereltype', 'shortestpath', 'chatmessage', 'getchat', 'getqueue',
                     'getallpos', 'exporttoimage', 'publish']
-
+##
+# The Graph is a structured collection of Node, Link, LinkType, and Detail objects.
+# Most actions are performed through the Graph class.
+#
 class Graph:
-    my_nodes = []
-    my_node_index = {}
-    my_links = []
-    my_link_index = {}
-    my_details = []
-    my_detail_index = {}
-    my_link_types = {}
-    my_queries = deque()
-    transit = False
+    __nodes = []
+    __node_index = {}
+    __links = []
+    __link_index = {}
+    __details = []
+    __details_index = {}
+    __link_types = {}
+    __queries = deque()
+    __transit = False
 
     def __init__(self, name, filename, url, username, key):
+        ##
+        # This is the constructor for the Graph class. It should not be accessed directly,
+        # but instead through the pyPsynth.create_graph and pyPsynth.load_graph functions.
+        # @param name: <i>str</i> The displayed name of a Graph.
+        # @param filename: <i>str</i> A global unique filename of a Graph.
+        # @param url: <i>str</i> The base URL of your Psynth server. e.g. https://psynth.psymphonic.com/
+        # @param username: <i>str</i> Your Psynth username
+        # @param key: <i>str</i> Your Psynth API key.
+        #
+        # @code
+        # g = pyPsynth.load_graph(
+        #     filename='myfile.gt',
+        #     url='https://psynth.psymphonic.com/',
+        #     username='me@company.com',
+        #     key='myapikey'
+        # )
+        # @endcode
+        #
+        # @code
+        # g = pyPsynth.create_graph(
+        #     name='my graph',
+        #     url='https://psynth.psymphonic.com/',
+        #     username='me@company.com',
+        #     key='myapikey'
+        # )
+        # @endcode
         self.name = name
         self.filename = filename
         self.url = url
         self.username = username
         self.key = key
 
-    def transmit(self):
-        if len(self.my_queries) > 0:
-            q = self.my_queries.popleft()
+    def __transmit(self):
+        if len(self.__queries) > 0:
+            q = self.__queries.popleft()
             c = requests.get(self.prep(q['query']), verify=False)
             if c.status_code == 200:
                 cr = c.json()
@@ -44,17 +74,36 @@ class Graph:
                 print q['query']+"    "+c.json()
             else:
                 print q['query']+"    "+str(c.status_code)
-            self.transmit()
+            self.__transmit()
         else:
-            self.transit = False
+            self.__transit = False
 
     def queue(self, query, callback):
-        self.my_queries.append({'query': query, 'callback': callback})
-        if not self.transit:
-            self.transit = True
-            self.transmit()
+        ##
+        # All queries should be processed through this function to ensure that they process in order.
+        # Mostly used internally.
+        #
+        # @param query: <i>dict</i> A dictionary object that contains query parameters.
+        # @param callback: <i>function</i> A function that should be performed on the response from the query.
+        #
+        # @code
+        # def point_handler(r):
+        #     print r
+        # g.queue({'query': 'drawgraph'}, point_handler)
+        # @endcode
+        self.__queries.append({'query': query, 'callback': callback})
+        if not self.__transit:
+            self.__transit = True
+            self.__transmit()
 
-    def id_tag(self, obj):
+    def __id_tag(self, obj):
+        ##
+        # This attaches the 'username', 'key', and 'filename' fields to the query dictionary.
+        # Mostly for internal use.
+        #
+        # @param obj: <i>dict</i> The query to tag up.
+        # @return obj: <i>dict</i> The updated query dictionary.
+        # #
         obj['user'] = self.username
         obj['key'] = self.key
         if len(self.filename) > 0:
@@ -62,7 +111,13 @@ class Graph:
         return obj
 
     def prep(self, query):
-        query = self.id_tag(query)
+        ##
+        # Turns a query dictionary into a valid URL. Mostly used internally.
+        #
+        # @param query: <i>dict</i> A query dictionary.
+        # @return url: <i>str</i> A valid URL
+        #
+        query = self.__id_tag(query)
         if query['query'] not in allowed_queries:
             raise ValueError("'query' field contained an invalid value.")
         else:
@@ -70,10 +125,17 @@ class Graph:
             return url
 
     def add_detail(self, detail, callback=None, update=True):
+        ##
+        # This adds a Detail to the Graph. It is easier to add Detail objects directly to Node and Link objects.
+        #
+        # @param detail: <i>Detail</i> A Detail object to add to the Graph.
+        # @param callback: <i>function</i> A function to perform on the response of the query.
+        # @param update: <i>bool</i> Whether or not to immediately enqueue the query.
+        #
         if detail.__class__.__name__ == "Detail":
             detail.graph = self
-            self.my_details.append(detail)
-            self.my_detail_index[detail.uid] = detail
+            self.__details.append(detail)
+            self.__details_index[detail.uid] = detail
             if update:
                 q = detail.dictionary()
                 q['query'] = "newdetail"
@@ -83,10 +145,17 @@ class Graph:
             raise TypeError('Graph.add_detail requires a Detail-type object')
 
     def add_link(self, link, callback=None, update=True):
+        ##
+        # This adds a Link to the Graph.
+        #
+        # @param link: <i>Link</i> A Link to add to the Graph.
+        # @param callback: <i>function</i> A function to perform on the response to the query.
+        # @param update: <i>bool</i> Whether or not to immediately enqueue the query.
+        #
         if link.__class__.__name__ == "Link":
             link.graph = self
-            self.my_links.append(link)
-            self.my_link_index[link.uid] = link
+            self.__links.append(link)
+            self.__link_index[link.uid] = link
             if update:
                 q = link.dictionary()
                 q['query'] = "newrel"
@@ -96,9 +165,16 @@ class Graph:
             raise TypeError('Graph.add_link requires a Link-type object.')
 
     def add_link_type(self, link_type, callback=None, update=True):
+        ##
+        # Adds a LinkType to the Graph. Must be added before Link objects of that type can be created.
+        #
+        # @param link_type: <i>LinkType</i> A LinkType to add to the Graph
+        # @param callback: <i>function</i> A function to perform on the response to the query.
+        # @param update: <i>bool</i> Whether or not to immediately enqueue the query.
+        #
         if link_type.__class__.__name__ == "LinkType":
             link_type.graph = self
-            self.my_link_types[link_type.name] = link_type
+            self.__link_types[link_type.name] = link_type
             if update:
                 q = link_type.dictionary()
                 q['query'] = "newreltype"
@@ -108,10 +184,17 @@ class Graph:
             raise TypeError('Graph.add_link_type requires a LinkType-type object.')
 
     def add_node(self, node, callback=None, update=True):
+        ##
+        # Adds a Node to the Graph.
+        #
+        # @param node: <i>Node</i> The Node to add to the Graph.
+        # @param callback: <i>function</i> A function to perform on the response from the server.
+        # @param update: Whether or not to immediately enqueue the query.
+        #
         if node.__class__.__name__ == "Node":
             node.graph = self
-            self.my_nodes.append(node)
-            self.my_node_index[node.uid] = node
+            self.__nodes.append(node)
+            self.__node_index[node.uid] = node
             if update:
                 q = node.dictionary()
                 q['query'] = "newnode"
@@ -121,88 +204,187 @@ class Graph:
             raise TypeError('Graph.add_node requires a Node-type object.')
 
     def detail(self, uid):
-        if uid in self.my_detail_index:
-            return self.my_detail_index[uid]
+        ##
+        # Returns a Detail by its UID
+        #
+        # @param uid: <i>str</i> The uid of the Detail to return.
+        # @return detail: <i>Detail</i>
+        #
+        if uid in self.__details_index:
+            return self.__details_index[uid]
+        return None
 
     def detail_list(self):
-        return self.my_details
+        ##
+        # Returns a list of Detail objects in the Graph.
+        #
+        # @return details: <i>list</i> A list of Detail objects.
+        #
+        return self.__details
 
     def details(self):
-        return self.my_detail_index
+        ##
+        # Returns a dictionary of Detail objects keyed by uid.
+        #
+        # @return details: <i>dict</i> A uid-indexed dictionary of Detail objects.
+        #
+        return self.__details_index
 
     def draw(self, callback=None):
+        ##
+        # Calculates a layout for the Graph and returns new positions for all Node and Detail objects.
+        #
+        # @param callback: <i>function</i> A function to perform on the response from the server.
+        #
         q = {'query': 'drawgraph'}
 
         def handler(r):
             for n in r['nodes']:
-                self.my_node_index[n['UID']].x = n['X']
-                self.my_node_index[n['UID']].y = n['Y']
+                self.__node_index[n['UID']].x = n['X']
+                self.__node_index[n['UID']].y = n['Y']
             for d in r['details']:
-                self.my_detail_index[d['UID']].x = d['X']
-                self.my_detail_index[d['UID']].y = d['Y']
+                self.__details_index[d['UID']].x = d['X']
+                self.__details_index[d['UID']].y = d['Y']
             if callback:
                 callback(r)
         self.queue(q, handler)
 
     def height(self):
+        ##
+        # Returns the height of the Graph.
+        #
+        # @return height: <i>float</i>
+        #
         return self.max_y()-self.min_y()
 
     def link(self, uid):
-        if uid in self.my_link_index:
-            return self.my_link_index[uid]
+        ##
+        # Returns a Link by uid.
+        #
+        # @param uid: <i>str</i> The uid of the Link to return.
+        # @return link: <i>Link</i>
+        #
+        if uid in self.__link_index:
+            return self.__link_index[uid]
+        else:
+            return None
 
     def link_list(self):
-        return self.my_links
+        ##
+        # Returns a list of Link objects in the Graph.
+        #
+        # @return links: <i>list</i> A list of Link objects.
+        #
+        return self.__links
 
     def links(self):
-        return self.my_link_index
+        ##
+        # Returns a uid-keyed dictionary of Link objects in the Graph.
+        #
+        # @return links: <i>dict</i> A uid-keyed dictionary of Link objects.
+        #
+        return self.__link_index
 
     def link_type(self, name):
-        if name in self.my_link_types:
-            return self.my_link_types[name]
+        ##
+        # Returns a LinkType object by name.
+        #
+        # @param name: <i>str</i> The name of the LinkType to return.
+        # @return link_type: <i>LinkType</i>
+        #
+        if name in self.__link_types:
+            return self.__link_types[name]
 
     def link_types(self):
-        return self.my_link_types
+        ##
+        # Returns a name-indexed dictionary of LinkType objects.
+        #
+        # @return link_types: <i>dict</i> A name-indexed dictionary of LinkType objects.
+        #
+        return self.__link_types
 
     def max_x(self):
+        ##
+        # Returns the maximum x value of all Node objects in the Graph.
+        #
+        # @return x: <i>float</i>
+        #
         m = None
-        for n in self.my_nodes:
+        for n in self.__nodes:
             if not m or n.x > m:
                 m = n.x
         return m
 
     def max_y(self):
+        ##
+        # Returns the maximum y value of all Node objects in the Graph.
+        #
+        # @return y: <i>float</i>
+        #
         m = None
-        for n in self.my_nodes:
+        for n in self.__nodes:
             if not m or n.y > m:
                 m = n.y
         return m
 
     def min_x(self):
+        ##
+        # Returns the minimum x value of all Node objects in the Graph.
+        #
+        # @return x: <i>float</i>
+        #
         m = None
-        for n in self.my_nodes:
+        for n in self.__nodes:
             if not m or n.x < m:
                 m = n.x
         return m
 
     def min_y(self):
+        ##
+        # Returns the minimum y value of all Node objects in the Graph.
+        #
+        # @return y: <i>float</i>
+        #
         m = None
-        for n in self.my_nodes:
+        for n in self.__nodes:
             if not m or n.y < m:
                 m = n.y
         return m
 
     def node(self, uid):
-        if uid in self.my_node_index:
-            return self.my_node_index[uid]
+        ##
+        # Returns a Node by uid.
+        #
+        # @param uid: <i>str</i> The uid of the Node to be returned.
+        # @return node: <i>Node</i>
+        #
+        if uid in self.__node_index:
+            return self.__node_index[uid]
+        else:
+            return None
 
     def node_list(self):
-        return self.my_nodes
+        ##
+        # Returns a list of all Node objects in the Graph.
+        #
+        # @return nodes: <i>list</i> A list of Node objects.
+        #
+        return self.__nodes
 
     def nodes(self):
-        return self.my_node_index
+        ##
+        # Returns a uid-indexed dictionary of Node objects.
+        #
+        # @return nodes: <i>dict</i> A uid-indexed dictionary of Node objects.
+        #
+        return self.__node_index
 
     def publish(self, callback=None):
+        ##
+        # Creates a perma-link for a public viewer of the graph.
+        #
+        # @param callback: <i>function</i> A function to perform on the response from the query.
+        #
         q = {'query': 'publish', 'x': -(self.min_x()+.1), 'y': -(self.min_y()+.1), 'scale': 1080/self.height()}
 
         def handler(r):
@@ -213,32 +395,70 @@ class Graph:
         self.queue(q, handler)
 
     def remove_detail(self, detail, callback=None, update=True):
-        self.my_details.remove(detail)
-        del self.my_detail_index[detail.uid]
+        ##
+        # Removes a Detail from the Graph.
+        #
+        # @param detail: <i>Detail</i> The Detail to remove.
+        # @param callback: <i>function</i> A function to perform on the response from the query.
+        # @param update: <i>bool</i> Whether or not to immediately enqueue the query.
+        #
+        self.__details.remove(detail)
+        del self.__details_index[detail.uid]
         if update:
             q = {'query': 'deldetail', 'uid': detail.uid}
             self.queue(q, callback)
 
     def remove_link(self, link, callback=None, update=True):
-        self.my_links.remove(link)
-        del self.my_link_index[link.uid]
+        ##
+        # Removes a Link from the Graph.
+        #
+        # @param link: <i>Link<i> The Link to remove.
+        # @param callback: <i>function<i> A function to perform on the response from the query.
+        # @param update: <i>bool</i> Whether or not to immediately enqueue the query.
+        #
+        self.__links.remove(link)
+        del self.__link_index[link.uid]
         if update:
             q = {'query': 'delrel', 'uid': link.uid}
             self.queue(q, callback)
 
     def remove_node(self, node, callback=None, update=True):
-        self.my_nodes.remove(node)
-        del self.my_node_index[node.uid]
+        ##
+        # Removes a Node from the Graph.
+        #
+        # @param node: <i>Node</i> The Node to remove.
+        # @param callback: <i>function<i> A function to perform on the response from the query.
+        # @param update: <i>bool</i> Whether or not to immediately enqueue the query.
+        self.__nodes.remove(node)
+        del self.__node_index[node.uid]
         if update:
             q = {'query': 'delnode', 'uid': node.uid}
             self.queue(q, callback)
 
     def width(self):
+        ##
+        # Returns the width of the Graph.
+        #
+        # @return width: <i>float</i>
+        #
         return self.max_x()-self.min_x()
 
-
+##
+# Nodes are the basic unit in Psynth. They can be connected by Link objects, and Detail objects can be attached to them.
+#
 class Node():
     def __init__(self, uid=None, name="New Node", x=1, y=1, shape=6, image="na", radius=24, color="default"):
+        ##
+        #
+        # @param uid:
+        # @param name:
+        # @param x:
+        # @param y:
+        # @param shape:
+        # @param image:
+        # @param radius:
+        # @param color:
+        #
         if not uid:
             uid = str(uuid.uuid4())
         self.name = urllib.unquote(name)
@@ -260,7 +480,7 @@ class Node():
             detail.x = self.x+self.radius+4
         if not detail.y:
             num = 0
-            for d in self.graph.detail_list():
+            for d in self.graph.detail_list:
                 if d.anchor_uid == self.uid:
                     num += 1
             detail.y = self.y+self.radius+(20*num)
@@ -268,14 +488,14 @@ class Node():
 
     def details(self):
         dets = {}
-        for d in self.graph.detail_list():
+        for d in self.graph.detail_list:
             if d.anchor_uid == self.uid:
                 dets[d.uid] = d
         return dets
 
     def detail_list(self):
         dets = []
-        for d in self.graph.detail_list():
+        for d in self.graph.detail_list:
             if d.anchor_uid == self.uid:
                 dets.append = d
         return dets
@@ -339,9 +559,20 @@ class Node():
         q['query'] = "updatenode"
         self.graph.queue(q, callback)
 
-
+##
+# Links connect Node objects to each other. They have a LinkType.  Detail objects can be attached to them.
+#
 class Link():
     def __init__(self, origin_uid, terminus_uid, type, name="Link", value=1, uid=None):
+        ##
+        #
+        # @param origin_uid:
+        # @param terminus_uid:
+        # @param type:
+        # @param name:
+        # @param value:
+        # @param uid:
+        #
         if not uid:
             uid = str(uuid.uuid4())
         self.origin_uid = urllib.unquote(origin_uid)
@@ -354,6 +585,9 @@ class Link():
 
     graph = None
 
+    def link_type(self):
+        return self.graph.link_type(self.type)
+
     def add_detail(self, detail, update=True, callback=None):
         detail.anchor_type = self.__class__.__name__
         detail.anchor_uid = self.uid
@@ -365,14 +599,14 @@ class Link():
 
     def detail_list(self):
         dets = []
-        for d in self.graph.detail_list():
+        for d in self.graph.detail_list:
             if d.anchor_uid == self.uid:
                 dets.append(d)
         return dets
 
     def details(self):
         dets = {}
-        for d in self.graph.detail_list():
+        for d in self.graph.detail_list:
             if d.anchor_uid == self.uid:
                 dets[d.uid] = d
         return dets
@@ -405,9 +639,19 @@ class Link():
         q['query'] = "updaterel"
         self.graph.queue(q, callback)
 
-
+##
+# LinkType objects define the parameters of Link objects.
+#
 class LinkType:
     def __init__(self, name='Links', icon='img/link_icon.png', tile='img/link_tile.png', color='#1AA2D4', max=10):
+        ##
+        #
+        # @param name:
+        # @param icon:
+        # @param tile:
+        # @param color:
+        # @param max:
+        #
         self.name = urllib.unquote(name)
         self.icon = urllib.unquote_plus(icon)
         self.tile = urllib.unquote_plus(tile)
@@ -429,9 +673,22 @@ class LinkType:
         q['query'] = "updatereltype"
         self.graph.queue(q, callback)
 
-
+##
+# Detail objects contain links or text, and can be attached to Node objects and Link objects.
+#
 class Detail:
     def __init__(self, content, anchor_uid=None, anchor_type=None, x=None, y=None, type='comment', name=None, uid=None):
+        ##
+        #
+        # @param content:
+        # @param anchor_uid:
+        # @param anchor_type:
+        # @param x:
+        # @param y:
+        # @param type:
+        # @param name:
+        # @param uid:
+        #
         if not uid:
             uid = str(uuid.uuid4())
         if anchor_uid:
