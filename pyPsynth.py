@@ -447,17 +447,18 @@ class Graph:
 # Nodes are the basic unit in Psynth. They can be connected by Link objects, and Detail objects can be attached to them.
 #
 class Node():
-    def __init__(self, uid=None, name="New Node", x=1, y=1, shape=6, image="na", radius=24, color="default"):
+    def __init__(self, uid=None, name="New Node", x=1.0, y=1.0, shape=6, image="na", radius=24.0, color="default"):
         ##
+        # Constructs a Node object.
         #
-        # @param uid:
-        # @param name:
-        # @param x:
-        # @param y:
-        # @param shape:
-        # @param image:
-        # @param radius:
-        # @param color:
+        # @param uid: <i>str</i> A global unique identifier for the Node.
+        # @param name: <i>str</i> The displayed name of the Node.
+        # @param x: <i>float</i> The x-coordinate of the Node. Assumes a web-standard grid with (0,0) at (top,left)
+        # @param y: <i>float</i> The y-coordinate of the Node. Assumes a web-standard grid with (0,0) at (top,left)
+        # @param shape: <i>int</i> The number of sides the Node should have. 0 for circle, 1 for image.
+        # @param image: <i>str</i> The url of an image to display on this node. Requires a shape of 1.
+        # @param radius: <i>float</i> The radius of the Node shape.
+        # @param color: <i>str</i> A color string, e.g. '#FF0000'. 'default' will make the Node responsive to user-selected palette.
         #
         if not uid:
             uid = str(uuid.uuid4())
