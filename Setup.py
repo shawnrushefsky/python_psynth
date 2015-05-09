@@ -3,10 +3,10 @@ import os
 from setuptools import setup
 
 setup(
-    name="psynthpy",
+    name="psynth",
     version="0.1.0rcN",
     description="An open-source Python library for generating graphs in Psymphonic Psynth.",
-    url="http://shawnrushefsky.github.io/PsynthPy",
+    url="http://shawnrushefsky.github.io/python_psynth",
     license='MIT',
     install_requires=['requests', 'simplejson'],
     classifiers=[
