@@ -81,9 +81,9 @@ class Graph:
                 if q['callback']:
                     q['callback'](cr)
             elif c.status_code == 406:
-                print str(q['query'])+"    "+c.json()
+                raise SyntaxError(str(q['query'])+"    "+c.json())
             else:
-                print str(q['query'])+"    "+str(c.status_code)
+                raise SyntaxError(str(q['query'])+"    "+str(c.status_code))
             self.__transmit()
         else:
             self.__transit = False
@@ -157,7 +157,6 @@ class Graph:
                 q = detail.dictionary()
                 q['query'] = "newdetail"
                 detail.created = True
-                print q
                 self.queue(q, callback)
         else:
             raise TypeError('Graph.add_detail requires a Detail-type object')
@@ -276,7 +275,7 @@ class Graph:
         #
         # @code
         # for i in range(0, 100):
-        #     n = pyPsynth.Node(name='Node '+i)
+        #     n = pyPsynth.Node(name='Node '+str(i))
         #     g.add_node(n)
         # g.draw()
         # @endcode
@@ -326,8 +325,8 @@ class Graph:
         # @return links: <i>list</i> :: A list of Link objects.
         #
         # @code
-        # for l in g.link_list():
-        #     print l.name
+        # for link in g.link_list():
+        #     print link.name
         # @endcode
         return self.__links
 
@@ -338,8 +337,8 @@ class Graph:
         # @return links: <i>dict</i> :: A uid-keyed dictionary of Link objects.
         #
         # @code
-        # for l in g.links():
-        #     print g.links()[l].name
+        # for uid in g.links():
+        #     print g.links()[uid].name
         # @endcode
         return self.__link_index
 
@@ -668,13 +667,13 @@ class Node():
         # @return links: <i>list</i> :: A list of Link objects which originate at this Node.
         #
         # @code
-        # for l in n.out_links():
-        #     print l.value
+        # for link in n.out_links():
+        #     print link.value
         # @endcode
         links = []
-        for l in self.graph.link_list():
-            if l.origin_uid == self.uid:
-                links.append(l)
+        for link in self.graph.link_list():
+            if link.origin_uid == self.uid:
+                links.append(link)
         return links
 
     def in_links(self):
@@ -684,13 +683,13 @@ class Node():
         # @return links: <i>list</i> :: A list of Link objects which terminate at this Node.
         #
         # @code
-        # for l in n.in_links():
-        #     print l.value
+        # for link in n.in_links():
+        #     print link.value
         # @endcode
         links = []
-        for l in self.graph.link_list():
-            if l.terminus_uid == self.uid:
-                links.append(l)
+        for link in self.graph.link_list():
+            if link.terminus_uid == self.uid:
+                links.append(link)
         return links
 
     def all_links(self):
@@ -700,13 +699,13 @@ class Node():
         # @return links: <i>list</i> :: A list of Link objects which connect to this Node.
         #
         # @code
-        # for l in n.all_links():
-        #     print l.value
+        # for link in n.all_links():
+        #     print link.value
         # @endcode
         links = []
-        for l in self.graph.link_list():
-            if l.origin_uid == self.uid or l.terminus_uid == self.uid:
-                links.append(l)
+        for link in self.graph.link_list():
+            if link.origin_uid == self.uid or link.terminus_uid == self.uid:
+                links.append(link)
         return links
 
     def out_neighbors(self):
@@ -720,9 +719,9 @@ class Node():
         #     print n2.name
         # @endcode
         neighbors = []
-        for l in self.graph.link_list():
-            if l.origin_uid == self.uid:
-                neighbors.append(l.terminus())
+        for link in self.graph.link_list():
+            if link.origin_uid == self.uid:
+                neighbors.append(link.terminus())
         return neighbors
 
     def in_neighbors(self):
@@ -736,9 +735,9 @@ class Node():
         #     print n2.name
         # @endcode
         neighbors = []
-        for l in self.graph.link_list():
-            if l.terminus_uid == self.uid:
-                neighbors.append(l.origin())
+        for link in self.graph.link_list():
+            if link.terminus_uid == self.uid:
+                neighbors.append(link.origin())
         return neighbors
 
     def all_neighbors(self):
@@ -752,11 +751,11 @@ class Node():
         #     print n2.name
         # @endcode
         neighbors = []
-        for l in self.graph.link_list():
-            if l.terminus_uid == self.uid:
-                neighbors.append(l.origin())
-            elif l.origin_uid == self.uid:
-                neighbors.append(l.terminus())
+        for link in self.graph.link_list():
+            if link.terminus_uid == self.uid:
+                neighbors.append(link.origin())
+            elif link.origin_uid == self.uid:
+                neighbors.append(link.terminus())
         return neighbors
 
     def dictionary(self):
@@ -810,7 +809,7 @@ class Link():
         # @param uid: <i>str</i> :: The global unique identifier of this Link.
         #
         # @code
-        # l = pyPsynth.Link(origin_node.uid, terminus_node.uid, 'Money', value=60)
+        # my_link = pyPsynth.Link(origin_node.uid, terminus_node.uid, 'Money', value=60)
         # g.add_link(l)
         # @endcode
         if not uid:
@@ -847,7 +846,7 @@ class Link():
         # @return link_type: <i>LinkType</i> ::
         #
         # @code
-        # print l.link_type().color
+        # print link.link_type().color
         # @endcode
         return self.graph.link_type(self.type)
 
@@ -863,7 +862,7 @@ class Link():
         # d = pyPsynth.Detail(content="http://psymphonic.com", type="link")
         # l.add_detail(d)
         # @endcode
-        detail.anchor_type = self.__class__.__name__.lower()
+        detail.anchor_type = 'rel'
         detail.anchor_uid = self.uid
         if not detail.x:
             detail.x = self.center()['x']+10
@@ -932,7 +931,7 @@ class Link():
         # @return origin: <i>Node</i> :: 
         #
         # @code
-        # print l.origin().name
+        # print link.origin().name
         # @endcode
         return self.graph.node(self.origin_uid)
 
@@ -949,11 +948,11 @@ class Link():
         # print total_value
         # @endcode
         ps = []
-        for l in self.graph.link_list():
-            if l.origin_uid == self.origin_uid and l.terminus_uid == self.terminus_uid:
-                ps.append(l)
-            elif l.origin_uid == self.terminus_uid and l.terminus_uid == self.origin_uid:
-                ps.append(l)
+        for link in self.graph.link_list():
+            if link.origin_uid == self.origin_uid and link.terminus_uid == self.terminus_uid:
+                ps.append(link)
+            elif link.origin_uid == self.terminus_uid and link.terminus_uid == self.origin_uid:
+                ps.append(link)
         return ps
 
     def terminus(self):
@@ -963,7 +962,7 @@ class Link():
         # @return terminus: <i>Node</i> :: 
         #
         # @code
-        # print l.terminus().name
+        # print link.terminus().name
         # @endcode
         return self.graph.node(self.terminus_uid)
 
@@ -989,8 +988,8 @@ class Link():
         # @return point: <i>dict</i> :: A dictionary {x,y} identifying the center of this Link.
         #
         # @code
-        # if l.center()['x'] > 42:
-        #     print l.center()['y']
+        # if link.center()['x'] > 42:
+        #     print link.center()['y']
         # @endcode
         x = (self.origin().x+self.terminus().x)/2
         y = (self.origin().y+self.terminus().y)/2
@@ -1075,13 +1074,13 @@ class LinkType:
         #
         # @code
         # money_links = g.link_type('Money').links()
-        # for l in money_links:
-        #     print l.origin().name+"--$"+str(l.value)+"-->"+l.terminus().name
+        # for link in money_links:
+        #     print link.origin().name+"--$"+str(link.value)+"-->"+link.terminus().name
         # @endcode
         ls = []
-        for l in self.graph.links():
-            if l.type == self.name:
-                ls.append(l)
+        for link in self.graph.links():
+            if link.type == self.name:
+                ls.append(link)
         return ls
 
 ##
@@ -1160,7 +1159,7 @@ class Detail:
         # @endcode
         if self.anchor_type == "Node" or self.anchor_type == "node":
             return self.graph.node(self.anchor_uid)
-        elif self.anchor_type == "Link" or self.anchor_type == "link":
+        elif self.anchor_type == "rel":
             return self.graph.link(self.anchor_uid)
 
     def dictionary(self):
@@ -1283,13 +1282,13 @@ def load_graph(filename, url, username, key):
                       image=n['PICTURE'])
             nn.created = True
             g.add_node(nn, update=False)
-        for l in ls:
-            ll = Link(name=l['NAME'],
-                      type=l['TYPE'],
-                      value=l['VALUE'],
-                      origin_uid=l['ORIGIN'],
-                      terminus_uid=l['TERMINUS'],
-                      uid=l['UID'])
+        for link in ls:
+            ll = Link(name=link['NAME'],
+                      type=link['TYPE'],
+                      value=link['VALUE'],
+                      origin_uid=link['ORIGIN'],
+                      terminus_uid=link['TERMINUS'],
+                      uid=link['UID'])
             ll.created = True
             g.add_link(ll, update=False)
         for d in ds:
