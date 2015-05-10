@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['width',['width',['../classpsynth_1_1_graph.html#a953c9b55b26c6c85eeaff4c120398128',1,'psynth::Graph']]]
+  ['width',['width',['../classpsynth_1_1psynth_1_1_graph.html#a9d37f46c9b291073c80be601014ea061',1,'psynth::psynth::Graph']]]
 ];

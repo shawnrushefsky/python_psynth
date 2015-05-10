@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['icon',['icon',['../classpsynth_1_1_link_type.html#af8b7032c9080bc2ed4b482cfb1127c1e',1,'psynth::LinkType']]],
-  ['image',['image',['../classpsynth_1_1_node.html#aad0ffa9335acc00c67fc871fcd25ef55',1,'psynth::Node']]]
+  ['icon',['icon',['../classpsynth_1_1psynth_1_1_link_type.html#a8b74420a0fac4cd8095cb8f02f93061e',1,'psynth::psynth::LinkType']]],
+  ['image',['image',['../classpsynth_1_1psynth_1_1_node.html#ac081bd8d15994c6073f3407c67434d2b',1,'psynth::psynth::Node']]]
 ];

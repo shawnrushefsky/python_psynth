@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../classpsynth_1_1_node.html#aaf9eac800f827d8e78830eb500555361',1,'psynth.Node.y()'],['../classpsynth_1_1_detail.html#a1e49d226bb1d4cf0c08a3c1be7e841a3',1,'psynth.Detail.y()']]]
+  ['y',['y',['../classpsynth_1_1psynth_1_1_node.html#a3e6513850190aa87d6026d8e8ec65ebd',1,'psynth.psynth.Node.y()'],['../classpsynth_1_1psynth_1_1_detail.html#a75d1ddb34fca06516c715c0e038b740b',1,'psynth.psynth.Detail.y()']]]
 ];

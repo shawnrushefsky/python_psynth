@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['max',['max',['../classpsynth_1_1_link_type.html#ab45892597acc6a80497aaa7a262726c2',1,'psynth::LinkType']]],
-  ['max_5fx',['max_x',['../classpsynth_1_1_graph.html#a5a07b8c98ec8cee0ff2f8ba45ffb5639',1,'psynth::Graph']]],
-  ['max_5fy',['max_y',['../classpsynth_1_1_graph.html#ae31afad882f34e573a3390e6547b078f',1,'psynth::Graph']]],
-  ['min_5fx',['min_x',['../classpsynth_1_1_graph.html#a961adfbd8c806a21f93f8d645740026e',1,'psynth::Graph']]],
-  ['min_5fy',['min_y',['../classpsynth_1_1_graph.html#aa725c49455c9ddd1882b776800ab8cd8',1,'psynth::Graph']]]
+  ['max',['max',['../classpsynth_1_1psynth_1_1_link_type.html#aad1c4f5dc59a85d0aa7366cf35d5118d',1,'psynth::psynth::LinkType']]],
+  ['max_5fx',['max_x',['../classpsynth_1_1psynth_1_1_graph.html#a06536cbf51d40fd4f34cb7ec1e082673',1,'psynth::psynth::Graph']]],
+  ['max_5fy',['max_y',['../classpsynth_1_1psynth_1_1_graph.html#acd3d10b971a6b9c2d52b68b4743ad05c',1,'psynth::psynth::Graph']]],
+  ['min_5fx',['min_x',['../classpsynth_1_1psynth_1_1_graph.html#a48a29d70200abe8850fd1f5028d7a12c',1,'psynth::psynth::Graph']]],
+  ['min_5fy',['min_y',['../classpsynth_1_1psynth_1_1_graph.html#a29d5074014fdb56264b9bffe01c29bd9',1,'psynth::psynth::Graph']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queue',['queue',['../classpsynth_1_1_graph.html#ac565a55df444d04d852eacd656e32bcf',1,'psynth::Graph']]]
+  ['queue',['queue',['../classpsynth_1_1psynth_1_1_graph.html#a4a3dbcff94168190d47c5c0611d44a3d',1,'psynth::psynth::Graph']]]
 ];

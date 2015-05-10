@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pypsynth',['pyPsynth',['../namespacepy_psynth.html',1,'']]]
+  ['psynth',['psynth',['../namespacepsynth.html',1,'']]]
 ];

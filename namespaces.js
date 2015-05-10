@@ -1,4 +1,4 @@
 var namespaces =
 [
-    [ "pyPsynth", "namespacepy_psynth.html", null ]
+    [ "psynth", "namespacepsynth.html", null ]
 ];
