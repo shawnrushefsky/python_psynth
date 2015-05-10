@@ -5,8 +5,8 @@ import simplejson as json
 import uuid
 import requests
 from collections import deque
-## @package pyPsynth
-#  pyPsynth is the official python package for generating graphs in Psymphonic Psynth
+## @package psynth
+#  psynth is the official python package for generating graphs in Psymphonic Psynth
 
 allowed_queries = ['createmap', 'getfilelist', 'renamemap', 'getwholegraph', 'newnode', 'batchnodes',
                     'delnode', 'newrel', 'batchrels', 'delrel', 'updatenode','updaterel', 'newdetail', 'deldetail',
@@ -32,7 +32,7 @@ class Graph:
     def __init__(self, name, filename, url, username, key):
         ##
         # This is the constructor for the Graph class. It should not be accessed directly,
-        # but instead through the pyPsynth.create_graph and pyPsynth.load_graph functions.
+        # but instead through the create_graph and load_graph functions.
         # @param name: <i>str</i> :: The displayed name of a Graph.
         # @param filename: <i>str</i> :: A global unique filename of a Graph.
         # @param url: <i>str</i> :: The base URL of your Psynth server. e.g. https://psynth.psymphonic.com/
@@ -40,7 +40,7 @@ class Graph:
         # @param key: <i>str</i> :: Your Psynth API key.
         #
         # @code
-        # g = pyPsynth.load_graph(
+        # g = load_graph(
         #     filename='myfile.gt',
         #     url='https://psynth.psymphonic.com/',
         #     username='me@company.com',
@@ -49,7 +49,7 @@ class Graph:
         # @endcode
         #
         # @code
-        # g = pyPsynth.create_graph(
+        # g = create_graph(
         #     name='my graph',
         #     url='https://psynth.psymphonic.com/',
         #     username='me@company.com',
@@ -275,7 +275,7 @@ class Graph:
         #
         # @code
         # for i in range(0, 100):
-        #     n = pyPsynth.Node(name='Node '+str(i))
+        #     n = Node(name='Node '+str(i))
         #     g.add_node(n)
         # g.draw()
         # @endcode
@@ -374,7 +374,7 @@ class Graph:
         # @return x: <i>float</i> ::
         #
         # @code
-        # n = pyPsynth.Node(x=g.max_x()+50)
+        # n = Node(x=g.max_x()+50)
         # g.add_node(n)
         # @endcode
         m = None
@@ -390,7 +390,7 @@ class Graph:
         # @return y: <i>float</i> ::
         #
         # @code
-        # n = pyPsynth.Node(y=g.max_y()-50)
+        # n = Node(y=g.max_y()-50)
         # g.add_node(n)
         # @endcode
         m = None
@@ -406,7 +406,7 @@ class Graph:
         # @return x: <i>float</i> ::
         #
         # @code
-        # n = pyPsynth.Node(x=g.min_x()+50)
+        # n = Node(x=g.min_x()+50)
         # g.add_node(n)
         # @endcode
         m = None
@@ -422,7 +422,7 @@ class Graph:
         # @return y: <i>float</i> ::
         #
         # @code
-        # n = pyPsynth.Node(x=g.min_y()+50)
+        # n = Node(x=g.min_y()+50)
         # g.add_node(n)
         # @endcode
         m = None
@@ -569,7 +569,7 @@ class Node():
         # @param color: <i>str</i> :: A color string, e.g. '#FF0000'. 'default' will make the Node responsive to user-selected palette.
         #
         # @code
-        # n = pyPsynth.Node(name='My Node', shape=8, radius=33.5)
+        # n = Node(name='My Node', shape=8, radius=33.5)
         # g.add_node(n)
         # @endcode
         if not uid:
@@ -613,7 +613,7 @@ class Node():
         # @param callback: <i>function</i> :: An optional function to handle the server's response to the query.
         #
         # @code
-        # d = pyPsynth.Detail(content="http://psymphonic.com", type="link")
+        # d = Detail(content="http://psymphonic.com", type="link")
         # n.add_detail(d)
         # @endcode
         detail.anchor_type = self.__class__.__name__.lower()
@@ -809,7 +809,7 @@ class Link():
         # @param uid: <i>str</i> :: The global unique identifier of this Link.
         #
         # @code
-        # my_link = pyPsynth.Link(origin_node.uid, terminus_node.uid, 'Money', value=60)
+        # my_link = Link(origin_node.uid, terminus_node.uid, 'Money', value=60)
         # g.add_link(l)
         # @endcode
         if not uid:
@@ -859,7 +859,7 @@ class Link():
         # @param callback: <i>function</i> :: An optional function to handle the server's response to the query.
         #
         # @code
-        # d = pyPsynth.Detail(content="http://psymphonic.com", type="link")
+        # d = Detail(content="http://psymphonic.com", type="link")
         # l.add_detail(d)
         # @endcode
         detail.anchor_type = 'rel'
@@ -1010,7 +1010,7 @@ class LinkType:
         # @param max: <i>int</i> :: The maximum value allowed for this LinkType
         #
         # @code
-        # lt = pyPsynth.LinkType()
+        # lt = LinkType()
         # g.add_link_type(lt)
         # @endcode
 
@@ -1101,7 +1101,7 @@ class Detail:
         # @param uid: <i>str</i> :: A global unique identifier for this Detail.
         #
         # @code
-        # d = pyPsynth.Detail("http://psymphonic.com/", type="link")
+        # d = Detail("http://psymphonic.com/", type="link")
         # n.add_detail(d)
         # @endcode
         if not uid:
@@ -1208,7 +1208,7 @@ def create_graph(name, url, username, key):
     # @return graph: <i>Graph</i> ::
     #
     # @code
-    # g = pyPsynth.create_graph(
+    # g = create_graph(
     #     name='my graph',
     #     url='https://psynth.psymphonic.com/',
     #     username='me@company.com',
@@ -1243,7 +1243,7 @@ def load_graph(filename, url, username, key):
     # # @return graph: <i>Graph</i> ::
     #
     # @code
-    # g = pyPsynth.load_graph(
+    # g = load_graph(
     #     filename='myfile.gt',
     #     url='https://psynth.psymphonic.com/',
     #     username='me@company.com',
