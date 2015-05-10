@@ -1,4 +1,4 @@
-__author__ = 'psymac0'
+__author__ = 'psymphonic'
 #coding=utf-8
 import urllib
 import simplejson as json

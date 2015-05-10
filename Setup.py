@@ -1,4 +1,4 @@
-__author__ = 'psymac0'
+__author__ = 'psymphonic'
 import os
 from setuptools import setup
 

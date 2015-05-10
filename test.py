@@ -1,6 +1,8 @@
-__author__ = 'psymac0'
-from psynth import *
+__author__ = 'psymphonic'
 from random import randint
+
+from psynth.psynth import *
+
 
 
 # Create a Graph
