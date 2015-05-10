@@ -4,14 +4,18 @@ from setuptools import setup
 
 setup(
     name="psynth",
-    version="0.1.0rcN",
+    packages=['psynth'],
+    version="0.1.0",
     description="An open-source Python library for generating graphs in Psymphonic Psynth.",
     url="http://shawnrushefsky.github.io/python_psynth",
+    download_url='https://github.com/shawnrushefsky/python_psynth.git',
+    author="Psymphonic",
+    author_email="shawn@psymphonic.com",
     license='MIT',
     install_requires=['requests', 'simplejson'],
     classifiers=[
         'Development Status :: 4 - Beta',
-        'License :: OSI Approves :: MIT License',
+        'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
         'Intended Audience :: Financial and Insurance Industry',
@@ -29,5 +33,5 @@ setup(
         'Topic :: Scientific/Engineering :: Visualization',
         'Topic :: Software Development :: Libraries'
     ],
-    keywords='psynth psymphonic graph graphdb visualize network'
+    keywords=['psynth', 'psymphonic', 'graph', 'graphdb', 'visualize', 'network']
 )
