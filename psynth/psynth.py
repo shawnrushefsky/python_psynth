@@ -555,7 +555,7 @@ class Graph:
 # Nodes are the basic unit in Psynth. They can be connected by Link objects, and Detail objects can be attached to them.
 #
 class Node():
-    def __init__(self, uid=None, name="New Node", x=1.0, y=1.0, shape=6, image="na", radius=24.0, color="default"):
+    def __init__(self, uid=None, name="New Node", x=1.0, y=1.0, shape=6, image="na", radius=24.0, color="dynamic"):
         ##
         # Constructs a Node object.
         #
@@ -566,7 +566,7 @@ class Node():
         # @param shape: <i>int</i> :: The number of sides the Node should have. 0 for circle, 1 for image.
         # @param image: <i>str</i> :: The url of an image to display on this node. Requires a shape of 1.
         # @param radius: <i>float</i> :: The radius of the Node shape.
-        # @param color: <i>str</i> :: A color string, e.g. '#FF0000'. 'default' will make the Node responsive to user-selected palette.
+        # @param color: <i>str</i> :: A color string, e.g. '#FF0000'. 'dynamic' will make the Node responsive to user-selected palette.  'static' will leave a node image's color unaffected.  Labeled as a Photo mode in the gui.
         #
         # @code
         # n = Node(name='My Node', shape=8, radius=33.5)
@@ -999,15 +999,16 @@ class Link():
 # LinkType objects define the parameters of Link objects.
 #
 class LinkType:
-    def __init__(self, name='Links', icon='img/link_icon.png', tile='img/link_tile.png', color='#1AA2D4', max=10):
+    def __init__(self, name='Links', icon='img/link_icon.png', tile='img/link_tile.png', color='dynamic', max=10, sync=True):
         ##
         # Constructs a LinkType object.
         #
         # @param name: <i>str</i> :: The name of this LinkType.
         # @param icon: <i>str</i> :: A URL for the icon to display for this LinkType
         # @param tile: <i>str</i> :: A URL for the image to tile on the tiling sprite for this LinkType
-        # @param color: <i>str</i> :: A color string, e.g '#FF0000' for this LinkType
+        # @param color: <i>str</i> :: A color string, e.g '#FF0000' for this LinkType. 'dynamic' will make this LinkType responsive to the user palette.
         # @param max: <i>int</i> :: The maximum value allowed for this LinkType
+        # @param sync: <i>bool</i> :: Whether the icons for this LinkType should reflect the color of the line.  Default True.
         #
         # @code
         # lt = LinkType()
@@ -1029,6 +1030,8 @@ class LinkType:
         ## <i>int</i> :: The maximum value any Link of this LinkType can possess.
         self.max = int(max)
 
+        self.sync = sync
+
         ## <i>bool</i> :: Whether or not this LinkType has been created on the server.
         self.created = False
 
@@ -1049,7 +1052,8 @@ class LinkType:
                 'ICON': urllib.quote_plus(self.icon),
                 'TILE': urllib.quote_plus(self.tile),
                 'COLOR': urllib.quote(self.color),
-                'MAX': self.max}
+                'MAX': self.max,
+                'SYNC': self.sync}
 
     def update(self, callback=None):
         ##

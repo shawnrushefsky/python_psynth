@@ -5,8 +5,8 @@ from setuptools import setup
 setup(
     name="psynth",
     packages=['psynth'],
-    version="0.1.0",
-    description="An open-source Python library for generating graphs in Psymphonic Psynth.",
+    version="0.1.3",
+    description="The official open-source Python library for generating graphs in Psymphonic Psynth.",
     url="http://shawnrushefsky.github.io/python_psynth",
     download_url='https://github.com/shawnrushefsky/python_psynth.git',
     author="Psymphonic",
