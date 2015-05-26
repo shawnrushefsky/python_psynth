@@ -149,6 +149,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aad1c4f5dc59a85d0aa7366cf35d5118d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpsynth_1_1psynth_1_1_link_type.html#aad1c4f5dc59a85d0aa7366cf35d5118d">max</a></td></tr>
 <tr class="memdesc:aad1c4f5dc59a85d0aa7366cf35d5118d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><em>int</em> :: The maximum value any <a class="el" href="classpsynth_1_1psynth_1_1_link.html" title="Links connect Node objects to each other. ">Link</a> of this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> can possess.  <a href="#aad1c4f5dc59a85d0aa7366cf35d5118d">More...</a><br /></td></tr>
 <tr class="separator:aad1c4f5dc59a85d0aa7366cf35d5118d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7c3d2b941354018117b10d9c8f85954"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpsynth_1_1psynth_1_1_link_type.html#ac7c3d2b941354018117b10d9c8f85954">sync</a></td></tr>
+<tr class="memdesc:ac7c3d2b941354018117b10d9c8f85954"><td class="mdescLeft">&#160;</td><td class="mdescRight"><em>bool</em> :: Whether the icons for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> should reflect the color of the line.  <a href="#ac7c3d2b941354018117b10d9c8f85954">More...</a><br /></td></tr>
+<tr class="separator:ac7c3d2b941354018117b10d9c8f85954"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a207d8f65f3afe23993027810cb30c5ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpsynth_1_1psynth_1_1_link_type.html#a207d8f65f3afe23993027810cb30c5ab">created</a></td></tr>
 <tr class="memdesc:a207d8f65f3afe23993027810cb30c5ab"><td class="mdescLeft">&#160;</td><td class="mdescRight"><em>bool</em> :: Whether or not this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> has been created on the server.  <a href="#a207d8f65f3afe23993027810cb30c5ab">More...</a><br /></td></tr>
 <tr class="separator:a207d8f65f3afe23993027810cb30c5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,13 +197,19 @@ Static Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>color</em> = <code>'#1AA2D4'</code>, </td>
+          <td class="paramname"><em>color</em> = <code>'dynamic'</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>max</em> = <code>10</code>&#160;</td>
+          <td class="paramname"><em>max</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sync</em> = <code>True</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -216,8 +225,9 @@ Static Public Attributes</h2></td></tr>
     <tr><td class="paramname">name</td><td><em>str</em> :: The name of this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a>. </td></tr>
     <tr><td class="paramname">icon</td><td><em>str</em> :: A URL for the icon to display for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> </td></tr>
     <tr><td class="paramname">tile</td><td><em>str</em> :: A URL for the image to tile on the tiling sprite for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> </td></tr>
-    <tr><td class="paramname">color</td><td><em>str</em> :: A color string, e.g '#FF0000' for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> </td></tr>
-    <tr><td class="paramname">max</td><td><em>int</em> :: The maximum value allowed for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a></td></tr>
+    <tr><td class="paramname">color</td><td><em>str</em> :: A color string, e.g '#FF0000' for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a>. 'dynamic' will make this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> responsive to the user palette. </td></tr>
+    <tr><td class="paramname">max</td><td><em>int</em> :: The maximum value allowed for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> </td></tr>
+    <tr><td class="paramname">sync</td><td><em>bool</em> :: Whether the icons for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> should reflect the color of the line. Default True.</td></tr>
   </table>
   </dd>
 </dl>
@@ -320,7 +330,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p><em>str</em> :: The color of this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a>. </p>
-<p>e.g. "#FF0000" </p>
+<p>e.g. "#FF0000". 'dynamic' will make this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> responsive to the user palette. </p>
 
 </div>
 </div>
@@ -404,6 +414,21 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac7c3d2b941354018117b10d9c8f85954"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">psynth.psynth.LinkType.sync</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><em>bool</em> :: Whether the icons for this <a class="el" href="classpsynth_1_1psynth_1_1_link_type.html" title="LinkType objects define the parameters of Link objects. ">LinkType</a> should reflect the color of the line. </p>
+<p>Default True. </p>
+
+</div>
+</div>
 <a class="anchor" id="a93e73f0aae85370bdd0b64b927504c0c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -428,7 +453,7 @@ Static Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacepsynth.html">psynth</a></li><li class="navelem"><b>psynth</b></li><li class="navelem"><a class="el" href="classpsynth_1_1psynth_1_1_link_type.html">LinkType</a></li>
-    <li class="footer">Generated on Sat May 9 2015 21:36:28 for python_psynth by
+    <li class="footer">Generated on Tue May 26 2015 11:24:38 for python_psynth by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

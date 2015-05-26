@@ -9,5 +9,6 @@ var classpsynth_1_1psynth_1_1_link_type =
     [ "icon", "classpsynth_1_1psynth_1_1_link_type.html#a8b74420a0fac4cd8095cb8f02f93061e", null ],
     [ "max", "classpsynth_1_1psynth_1_1_link_type.html#aad1c4f5dc59a85d0aa7366cf35d5118d", null ],
     [ "name", "classpsynth_1_1psynth_1_1_link_type.html#a29a57c44f6d0b49fb4339b119316b6ac", null ],
+    [ "sync", "classpsynth_1_1psynth_1_1_link_type.html#ac7c3d2b941354018117b10d9c8f85954", null ],
     [ "tile", "classpsynth_1_1psynth_1_1_link_type.html#a93e73f0aae85370bdd0b64b927504c0c", null ]
 ];
